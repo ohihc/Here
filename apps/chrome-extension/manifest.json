@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Here",
+  "description": "Vulnerability helper.",
+  "version": "1.0",
+  "action": {
+    "default_title": "React Chrome Extension",
+    "default_icon": "hello_extensions.png"
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/vulnerability-helper/vulnerability-helper.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
