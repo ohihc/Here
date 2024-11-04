@@ -8,6 +8,7 @@ export class AppController {
 
   @Post()
   async getHello(@Body() getHelpDto: GetHelpDto) {
+    return await this.appService.getHelloMocked(getHelpDto);
     return await this.appService.getHello(getHelpDto);
   }
 }
