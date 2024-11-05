@@ -1,13 +1,18 @@
 {
   "manifest_version": 3,
   "name": "Here",
-  "description": "Vulnerability helper.",
+  "description": "Vulnerability helper",
   "version": "1.0",
   "action": {
-    "default_title": "React Chrome Extension",
-    "default_icon": "hello_extensions.png"
+    "default_title": "Here",
+    "default_icon": "here_icon128.png"
   },
-  "permissions": ["contextMenus", "tabs"],
+  "icons": {
+    "16": "here_icon16.png",
+    "48": "here_icon48.png",
+    "128": "here_icon128.png"
+  },
+  "permissions": ["contextMenus", "tabs", "storage"],
   "content_scripts": [
     {
       "js": ["scripts/vulnerability-helper/vulnerability-helper.js"],
