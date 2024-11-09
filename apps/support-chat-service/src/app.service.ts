@@ -9,9 +9,9 @@ import { GetHelpDto } from './dto/get-help.dto';
 @Injectable()
 export class AppService {
   async getTips({ question, htmlContext }: GetHelpDto) {
-    const projectId = 'gemini-hackathon-439210';
-    const location = 'europe-west2';
-    const model = 'gemini-1.5-flash-001';
+    const projectId = process.env.VERTEX_AI_PROJECT_ID;
+    const location = process.env.VERTEX_AI_LOCATION;
+    const model = process.env.VERTEX_AI_MODEL;
 
     // Initialize Vertex with your Cloud project and location
     const vertexAI = new VertexAI({
@@ -73,7 +73,7 @@ export class AppService {
     return result.response;
   }
 
-  async getTipsMocked({ question, htmlContext }: GetHelpDto) {
+  async getTipsMocked(_: GetHelpDto) {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
@@ -134,9 +134,9 @@ export class AppService {
   }
 
   async getTipsStream({ question, htmlContext }: GetHelpDto) {
-    const projectId = 'gemini-hackathon-439210';
-    const location = 'europe-west2';
-    const model = 'gemini-1.5-flash-001';
+    const projectId = process.env.VERTEX_AI_PROJECT_ID;
+    const location = process.env.VERTEX_AI_LOCATION;
+    const model = process.env.VERTEX_AI_MODEL;
 
     // Initialize Vertex with your Cloud project and location
     const vertexAI = new VertexAI({
