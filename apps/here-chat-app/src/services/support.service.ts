@@ -23,3 +23,21 @@ export const getGenerativeModel = async (
 
   return response.json() as Promise<GenerativeModel>;
 };
+
+export const getGenerativeModelStream = async (
+  question: string,
+  htmlContext: string
+): Promise<any> => {
+  const response = await fetch("http://localhost:3000/here/tips-stream", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ question, htmlContext }),
+  });
+
+  if (response.ok && response.body) {
+    return response.body.getReader();
+  }
+};

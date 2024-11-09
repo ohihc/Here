@@ -7,7 +7,7 @@ import { SearchInput } from "./components/SearchInput/SearchInput";
 import { ChatBubble } from "./components/ChatBubble/ChatBubble";
 import { useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
-import { getGenerativeModel } from "./services/support.service";
+import { getGenerativeModelStream } from "./services/support.service";
 import { styled } from "@mui/material/styles";
 
 const Logo = styled("img")(() => ({
@@ -49,11 +49,15 @@ function App() {
   };
 
   const loadChats = async () => {
-    const { params } = (await chrome.storage.local.get()) as { params: Params };
-    if (params.result) {
-      restoreChat(params);
-    } else {
-      generateHelp(params.question.text);
+    if (chrome && chrome.storage) {
+      const { params } = (await chrome.storage.local.get()) as {
+        params: Params;
+      };
+      if (params.result) {
+        restoreChat(params);
+      } else {
+        generateHelp(params.question.text);
+      }
     }
   };
 
@@ -86,22 +90,51 @@ function App() {
       },
     ]);
 
-    const { params } = (await chrome.storage.local.get()) as { params: Params };
-    const result = await getGenerativeModel(query, params.context || "");
+    const { params } = chrome.storage
+      ? ((await chrome.storage.local.get()) as { params: Params })
+      : { params: { context: "<html/>" } };
+    // const result = await getGenerativeModel(query, params.context || "");
 
-    setChats([
-      ...currentChat,
-      {
-        type: "me",
-        content: query,
-      },
-      {
-        type: "system",
-        content:
-          result.candidates[0]?.content.parts[0]?.text ||
-          "Sorry I can't quite follow this question, could you ask again please",
-      },
-    ]);
+    const reader = await getGenerativeModelStream(query, params.context || "");
+
+    const processChunk = async () => {
+      if (reader) {
+        const { value, done } = await reader.read();
+        if (done) {
+          return;
+        }
+
+        setChats((chats) => {
+          const lastChat = chats[chats.length - 1];
+          const textContent = new TextDecoder().decode(value);
+          if (lastChat) {
+            lastChat.isLoading = false;
+            if (!lastChat.content.includes(textContent)) {
+              lastChat.content =
+                lastChat.content + new TextDecoder().decode(value);
+            }
+          }
+          return [...chats];
+        });
+        processChunk();
+      }
+    };
+
+    processChunk();
+
+    // setChats([
+    //   ...currentChat,
+    //   {
+    //     type: "me",
+    //     content: query,
+    //   },
+    //   {
+    //     type: "system",
+    //     content:
+    //       result.candidates[0]?.content.parts[0]?.text ||
+    //       "Sorry I can't quite follow this question, could you ask again please",
+    //   },
+    // ]);
   };
 
   return (
