@@ -93,8 +93,10 @@ This repository follows a [Turborepo](https://turbo.build/) structure, allowing 
 
 ## Features
 1. **Vulnerability Detection**: Monitors user interactions (e.g., multiple clicks on the same content or repeated editing in fields) to identify vulnerable users. A contextual tip is generated to help users understand financial terms.
+![Vulnerability Detection](docs/images/Chat-for-On-Demand-Assistance.gif)
 1. **Insight Generation**: Offers detailed insights when a user appears to need help, such as explaining how specific content affects financial decisions.
 1. **Text Summarisation**: Allows users to highlight and summarize long texts, helping them quickly understand complex documents.
+![Text Summarisation](docs/images/Instant-Summarisation-for-Key-Insights.gif)
 1. **Chat Assistance**: Users can open a chat to get additional support based on their needs and questions.
 
 
