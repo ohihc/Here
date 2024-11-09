@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Vulnerability helper",
   "author": "ohihc",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "scripts": {
     "turbo:build": "turbo build"
   },

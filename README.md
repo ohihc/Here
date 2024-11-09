@@ -106,3 +106,6 @@ This repository follows a [Turborepo](https://turbo.build/) structure, allowing 
     - Integrate data collection to refine user behavior insights.
     - Enhance prediction of vulnerable behaviors using Vertex AI.
     - Develop a custom model to further improve accuracy in assisting users with financial decisions.
+
+## License
+This project is licensed under the Apache License 2.0. See the [LICENSE](./LICENSE) file for details.
