@@ -14,6 +14,7 @@ chrome.contextMenus.onClicked.addListener(async (item, currentTab) => {
     question: { text: item.selectionText },
     result: null,
     context: currentTab.url,
+    mode: 'summary'
   };
   chrome.storage.local.set({ params });
   const tab = await chrome.tabs.create({ url: "apps/chat/index.html" });
