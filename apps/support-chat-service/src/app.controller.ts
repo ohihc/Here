@@ -9,7 +9,7 @@ export class AppController {
   
   @Post('/here/tips')
   async generate(@Body() getHelpDto: GetHelpDto) {
-    // return await this.appService.getTipsMocked(getHelpDto);
+    return await this.appService.getTipsMocked(getHelpDto);
     return await this.appService.getTips(getHelpDto);
   }
 

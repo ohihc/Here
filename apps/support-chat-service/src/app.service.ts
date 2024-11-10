@@ -1,14 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import {
-  VertexAI,
-  FunctionDeclarationSchemaType,
-  FileDataPart,
-} from '@google-cloud/vertexai';
+import { VertexAI } from '@google-cloud/vertexai';
 import { GetHelpDto } from './dto/get-help.dto';
+
+const BaseInstructionParts = [
+  {
+    text: 'You are a professional finance assistent based in UK. your name is HERE, escpically in loan area',
+  },
+  {
+    text: 'Your mission is to help people espically vulnerable users to understand how a loan will impact their live',
+  },
+  {
+    text: 'People are not aware they have vulnerabilities, please do not mention vulnerability in the answer',
+  },
+  {
+    text: 'Provide the anwser in a friendly way, and provide mulitple scenarios to allow user picture the impact',
+  },
+  {
+    text: 'If the qustion is related to a loan, mention the factors which may increase risk of vulnerability to financial harm',
+  },
+  {
+    text: 'Generate the answer in markdown format',
+  },
+];
+
+const TipInstructionParts = [
+  {
+    text: 'Split the answer into 2 parts, the first part is a short summary and the second part will be the examples and scenarios which like the read more function, split the two parts with *******',
+  },
+  {
+    text: 'the second part should be short and high readability, and also add more horizontal lines to separate different points, to allow vulnerable user easy to read',
+  },
+];
+
+const SummaryInstructionParts = [
+  {
+    text: 'the result should be short and clear in points form',
+  },
+];
 
 @Injectable()
 export class AppService {
-  async getTips({ question, htmlContext }: GetHelpDto) {
+  private generateModel({ mode }: GetHelpDto) {
     const projectId = process.env.VERTEX_AI_PROJECT_ID;
     const location = process.env.VERTEX_AI_LOCATION;
     const model = process.env.VERTEX_AI_MODEL;
@@ -19,39 +51,38 @@ export class AppService {
       location: location,
     });
 
+    // generate system instruction
+    let systemInstructionParts = [...BaseInstructionParts];
+    if (mode === 'summary') {
+      systemInstructionParts = [
+        ...BaseInstructionParts,
+        ...SummaryInstructionParts,
+      ];
+    } else {
+      systemInstructionParts = [
+        ...BaseInstructionParts,
+        ...TipInstructionParts,
+      ];
+    }
+
     // Instantiate the model
     const generativeModel = vertexAI.preview.getGenerativeModel({
       model: model,
       systemInstruction: {
         role: 'system',
-        parts: [
-          {
-            text: 'You are a professional finance assistent based in UK. your name is HERE, escpically in loan area',
-          },
-          {
-            text: 'Your mission is to help people espically vulnerable users to understand how a loan will impact their live',
-          },
-          {
-            text: 'People are not aware they have vulnerabilities, please do not mention vulnerability in the answer',
-          },
-          {
-            text: 'Provide the anwser in a friendly way, and provide mulitple scenarios to allow user picture the impact',
-          },
-          {
-            text: 'If the qustion is related to a loan, mention the factors which may increase risk of vulnerability to financial harm',
-          },
-          {
-            text: 'Split the answer into 2 parts, the first part is a short summary and the second part will be the examples and scenarios which like the read more function, split the two parts with *******',
-          },
-          {
-            text: 'Generate the answer in markdown format',
-          },
-        ],
+        parts: systemInstructionParts,
       },
     });
 
+    return generativeModel;
+  }
+
+  private generateVertexRequest({ question, htmlContext, mode }: GetHelpDto) {
     const textPart = {
-      text: `
+      text:
+        mode === 'summary'
+          ? `please help to summarise: ${question}`
+          : `
       What does ${question} mean to me, referring to the given html content
       `,
     };
@@ -69,8 +100,23 @@ export class AppService {
       ],
       // tools: functionDeclarations,
     };
-    const result = await generativeModel.generateContent(request);
+
+    return request;
+  }
+
+  async getTips(getHelpDto: GetHelpDto) {
+    const generativeModel = this.generateModel(getHelpDto);
+    const result = await generativeModel.generateContent(
+      this.generateVertexRequest(getHelpDto),
+    );
     return result.response;
+  }
+
+  async getTipsStream(getHelpDto: GetHelpDto) {
+    const generativeModel = this.generateModel(getHelpDto);
+    return generativeModel.generateContentStream(
+      this.generateVertexRequest(getHelpDto),
+    );
   }
 
   async getTipsMocked(_: GetHelpDto) {
@@ -129,72 +175,7 @@ export class AppService {
           },
           modelVersion: 'gemini-1.5-flash-001',
         });
-      }, 1500);
+      }, 500);
     });
-  }
-
-  async getTipsStream({ question, htmlContext }: GetHelpDto) {
-    const projectId = process.env.VERTEX_AI_PROJECT_ID;
-    const location = process.env.VERTEX_AI_LOCATION;
-    const model = process.env.VERTEX_AI_MODEL;
-
-    // Initialize Vertex with your Cloud project and location
-    const vertexAI = new VertexAI({
-      project: projectId,
-      location: location,
-    });
-
-    // Instantiate the model
-    const generativeModel = vertexAI.preview.getGenerativeModel({
-      model: model,
-      systemInstruction: {
-        role: 'system',
-        parts: [
-          {
-            text: 'You are a professional finance assistent based in UK. your name is HERE, escpically in loan area',
-          },
-          {
-            text: 'Your mission is to help people espically vulnerable users to understand how a loan will impact their live',
-          },
-          {
-            text: 'People are not aware they have vulnerabilities, please do not mention vulnerability in the answer',
-          },
-          {
-            text: 'Provide the anwser in a friendly way, and provide mulitple scenarios to allow user picture the impact',
-          },
-          {
-            text: 'If the qustion is related to a loan, mention the factors which may increase risk of vulnerability to financial harm',
-          },
-          {
-            text: 'Split the answer into 2 parts, the first part is a short summary and the second part will be the examples and scenarios which like the read more function, split the two parts with *******',
-          },
-          {
-            text: 'Generate the answer in markdown format',
-          },
-        ],
-      },
-    });
-
-    const textPart = {
-      text: `
-      What does ${question} mean to me, referring to the given html content
-      `,
-    };
-
-    const htmlContentPart = {
-      text: htmlContext,
-    };
-
-    const request = {
-      contents: [
-        {
-          role: 'user',
-          parts: [textPart, htmlContentPart],
-        },
-      ],
-      // tools: functionDeclarations,
-    };
-
-    return generativeModel.generateContentStream(request);
   }
 }

@@ -26,7 +26,8 @@ export const getGenerativeModel = async (
 
 export const getGenerativeModelStream = async (
   question: string,
-  htmlContext: string
+  htmlContext: string,
+  mode: string = 'tip'
 ): Promise<any> => {
   const response = await fetch("http://localhost:3000/here/tips-stream", {
     method: "POST",
@@ -34,7 +35,7 @@ export const getGenerativeModelStream = async (
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ question, htmlContext }),
+    body: JSON.stringify({ question, htmlContext, mode }),
   });
 
   if (response.ok && response.body) {

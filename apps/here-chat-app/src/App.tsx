@@ -21,6 +21,7 @@ type Params = {
     text: string;
   };
   result: string;
+  mode: string;
 };
 
 type Chat = {
@@ -92,10 +93,14 @@ function App() {
 
     const { params } = chrome.storage
       ? ((await chrome.storage.local.get()) as { params: Params })
-      : { params: { context: "<html/>" } };
+      : { params: { context: "<html/>", mode: "tip" } };
     // const result = await getGenerativeModel(query, params.context || "");
 
-    const reader = await getGenerativeModelStream(query, params.context || "");
+    const reader = await getGenerativeModelStream(
+      query,
+      params.context || "",
+      params.mode === "summary" ? "summary" : "tip"
+    );
 
     const processChunk = async () => {
       if (reader) {
