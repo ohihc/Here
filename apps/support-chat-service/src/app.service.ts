@@ -25,10 +25,10 @@ const BaseInstructionParts = [
 
 const TipInstructionParts = [
   {
-    text: 'Split the answer into 2 parts, the first part is a short summary and the second part will be the examples and scenarios which like the read more function, split the two parts with *******',
+    text: 'Split the answer into 2 parts, the first part is a short summary in paragraph stylea and the second part will be the examples and scenarios which like the read more function, split the two parts with *******',
   },
   {
-    text: 'the second part should be short and high readability, and also add more horizontal lines to separate different points, to allow vulnerable user easy to read',
+    text: 'the second part should be short and high readability, and also use titles to separate scenarios, factors and examples , to allow vulnerable user easy to read',
   },
 ];
 
@@ -129,7 +129,7 @@ export class AppService {
                 role: 'model',
                 parts: [
                   {
-                    text: "Hi there! \n\nIt looks like you're asking about the monthly repayment of £195.24, which is shown in the example for a £10,000 loan over 60 months.  This means you'd be paying £195.24 each month for the next 5 years. \n\nLet's break it down and explore how this impacts your finances:\n\n********\n\nHere are some scenarios to help you picture what this could mean for you:\n\n* **Scenario 1: Budgeting:**  If you're already tight on money, adding an extra £195.24 per month could make it harder to pay for essentials like groceries, bills, and rent. It's important to make sure you have enough left over each month to cover your needs after your loan payment.\n* **Scenario 2: Unexpected Expenses:** Life throws curveballs! If you have a sudden unexpected expense, like car repairs or a medical bill, having to pay £195.24 each month might make it more difficult to cover those costs.\n* **Scenario 3: Debt Snowball:** This repayment amount adds up!  Over 60 months, you'll pay a total of £11,714.40 back, which is more than the original £10,000 you borrowed. This extra cost is due to the interest charged on the loan. \n* **Scenario 4: Saving for the Future:**  The £195.24 you pay each month could be going towards your savings goals, like a house deposit, a holiday, or your children's education.  This is important to consider, as it could affect how quickly you reach your financial targets.\n\nIt's always best to be cautious and consider all aspects of the loan before taking it out. You should never feel pressured to take out a loan if you're unsure about the impact on your budget. \n\nRemember, **you can always contact a financial advisor** to discuss your specific situation and explore different loan options that best suit your needs.  \n",
+                    text: "The monthly repayment amount of £195.24 is a significant financial commitment. It's important to consider how this repayment will fit into your overall budget and how it might affect your everyday spending. \n\n*******\n\n## Scenarios and Factors\n\n### Scenario 1: Impact on Everyday Spending\n\nImagine you currently spend £1,000 per month on essential expenses like food, bills, and transportation. If you add a £195.24 loan repayment, you'll have less money for these essential items each month.  This could mean:\n\n* **Cutting back:** You may need to reduce spending on non-essentials like entertainment, dining out, or clothes.\n* **Prioritizing:** You might need to prioritize certain expenses over others, potentially delaying or canceling other purchases.\n\n### Scenario 2: Impact on Saving\n\nIf you were aiming to save £100 per month, adding a £195.24 loan repayment would make it harder to reach your savings goals. This could mean:\n\n* **Delayed savings:** You might need to postpone reaching a specific savings target.\n* **Reduced savings:** You might have to lower your monthly savings amount to accommodate the loan repayment.\n\n### Factors Affecting Financial Vulnerability\n\n* **Income:** If your income is low or uncertain, a loan repayment could make it difficult to cover essential expenses.\n* **Debt:** If you already have other debt obligations, adding a loan repayment could increase your financial burden and lead to overstretching your budget.\n* **Unexpected expenses:** If you face unexpected costs like medical bills or car repairs, a loan repayment could put additional pressure on your finances. \n",
                   },
                 ],
               },
@@ -138,44 +138,44 @@ export class AppService {
                 {
                   category: 'HARM_CATEGORY_HATE_SPEECH',
                   probability: 'NEGLIGIBLE',
-                  probabilityScore: 0.053466797,
+                  probabilityScore: 0.040283203,
                   severity: 'HARM_SEVERITY_NEGLIGIBLE',
-                  severityScore: 0.099609375,
+                  severityScore: 0.08154297,
                 },
                 {
                   category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
                   probability: 'NEGLIGIBLE',
-                  probabilityScore: 0.125,
-                  severity: 'HARM_SEVERITY_NEGLIGIBLE',
-                  severityScore: 0.11767578,
+                  probabilityScore: 0.11425781,
+                  severity: 'HARM_SEVERITY_MEDIUM',
+                  severityScore: 0.4375,
                 },
                 {
                   category: 'HARM_CATEGORY_HARASSMENT',
                   probability: 'NEGLIGIBLE',
-                  probabilityScore: 0.095214844,
+                  probabilityScore: 0.10498047,
                   severity: 'HARM_SEVERITY_NEGLIGIBLE',
-                  severityScore: 0.048095703,
+                  severityScore: 0.12158203,
                 },
                 {
                   category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
                   probability: 'NEGLIGIBLE',
-                  probabilityScore: 0.09814453,
-                  severity: 'HARM_SEVERITY_NEGLIGIBLE',
-                  severityScore: 0.099609375,
+                  probabilityScore: 0.11425781,
+                  severity: 'HARM_SEVERITY_MEDIUM',
+                  severityScore: 0.5859375,
                 },
               ],
-              avgLogprobs: -0.5875591433425834,
+              avgLogprobs: -0.49043985706029064,
               index: 0,
             },
           ],
           usageMetadata: {
-            promptTokenCount: 648,
-            candidatesTokenCount: 442,
-            totalTokenCount: 1090,
+            promptTokenCount: 31458,
+            candidatesTokenCount: 343,
+            totalTokenCount: 31801,
           },
           modelVersion: 'gemini-1.5-flash-001',
         });
-      }, 500);
+      }, 1500);
     });
   }
 }

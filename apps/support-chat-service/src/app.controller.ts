@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 import { GetHelpDto } from './dto/get-help.dto';
 
@@ -9,7 +9,7 @@ export class AppController {
   
   @Post('/here/tips')
   async generate(@Body() getHelpDto: GetHelpDto) {
-    return await this.appService.getTipsMocked(getHelpDto);
+    // return await this.appService.getTipsMocked(getHelpDto);
     return await this.appService.getTips(getHelpDto);
   }
 
